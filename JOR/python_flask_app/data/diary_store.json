@@ -1,0 +1,181 @@
+{
+  "journals": [
+    {
+      "id": "daily",
+      "name": "Daily Diary",
+      "description": "Everyday thoughts, quiet reflections, and evening musings.",
+      "icon": "book-heart",
+      "accentColor": "#A89F91",
+      "createdAt": "2026-10-25T15:08:53.981Z"
+    },
+    {
+      "id": "trips",
+      "name": "Trips & Wanderlust",
+      "description": "Travel logs, train rides, distant sights, and trail notes.",
+      "icon": "compass",
+      "accentColor": "#8C9A8E",
+      "createdAt": "2026-10-25T15:08:53.981Z"
+    },
+    {
+      "id": "gratitude",
+      "name": "Quiet Gratitude",
+      "description": "Small blessings, warm drinks, and gentle moments of joy.",
+      "icon": "sun",
+      "accentColor": "#B09E8C",
+      "createdAt": "2026-10-25T15:08:53.981Z"
+    }
+  ],
+  "entries": [
+    {
+      "id": "entry-1",
+      "journalId": "daily",
+      "title": "Rain on the Window & Herbal Tea",
+      "content": "A soft autumn rain began tapping against the glass around 7 AM. I made a pot of chamomile tea with a drop of wildflower honey. \n    \nThe morning had no rush in it. I spent twenty minutes simply watching droplets chase each other down the pane. There is an unspoken relief in letting the world spin without trying to catch up with every minute.\n    \nI worked on my sketchpad for a while and read three chapters of a Japanese essay on gardens. Feeling grounded, present, and thankful for the quiet rhythm today offered.",
+      "date": "2026-10-25T15:08:53.981Z",
+      "location": "Quiet Home Study",
+      "weather": "Gentle Rain, 16°C",
+      "userMoodTag": "peaceful",
+      "fontChoice": "cormorant",
+      "paperStyle": "linen-ruled",
+      "wordCount": 92,
+      "readingTimeMinutes": 1,
+      "tags": [
+        "rain",
+        "tea",
+        "peaceful",
+        "reading"
+      ],
+      "createdAt": "2026-10-25T15:08:53.981Z",
+      "updatedAt": "2026-10-25T15:14:34.170Z",
+      "moodAnalysis": {
+        "primaryMood": "Serene Contentment",
+        "moodCategory": "peaceful",
+        "moodScore": 8.8,
+        "emotionalSpectrum": [
+          {
+            "emotion": "Tranquility",
+            "percentage": 70
+          },
+          {
+            "emotion": "Gratitude",
+            "percentage": 20
+          },
+          {
+            "emotion": "Presence",
+            "percentage": 10
+          }
+        ],
+        "keyThemes": [
+          "solitude",
+          "warm beverages",
+          "unrushed morning",
+          "mindfulness"
+        ],
+        "personalizedReflection": "Your writing reveals a wonderful ability to find richness in stillness. Welcoming the rain without rushing gave your nervous system a deep, restorative pause.",
+        "soothingAdvice": "Carry this gentle, unhurried awareness into the evening. A warm shower or ten minutes of dim lighting before sleep will seal in today’s calm.",
+        "reflectivePrompt": "What is one small, sensory comfort you would love to bring into tomorrow morning?",
+        "analyzedAt": "2026-10-25T15:08:53.981Z"
+      }
+    },
+    {
+      "id": "entry-2",
+      "journalId": "trips",
+      "title": "Wandering Through the Cedar Forest Trail",
+      "content": "We started our ascent early from the foot of Mount Takao. The canopy filtered the morning sunlight into golden ribbons across the damp moss. \n    \nEvery step smelled of cedar needles and fresh cedar bark. At the halfway shrine, an elder priest was gently raking gravel. We exchanged a silent bow. \n    \nReaching the ridge overlooking the valley made my chest open up completely. Travel reminds me that my daily anxieties are small compared to ancient mountains that have stood for millennia.",
+      "date": "2026-10-24T15:08:53.981Z",
+      "location": "Mount Takao Cedar Trail",
+      "weather": "Crisp Morning Sun, 14°C",
+      "userMoodTag": "reflective",
+      "fontChoice": "lora",
+      "paperStyle": "soft-sage",
+      "wordCount": 92,
+      "readingTimeMinutes": 1,
+      "tags": [
+        "travel",
+        "hiking",
+        "nature",
+        "perspective"
+      ],
+      "createdAt": "2026-10-24T15:08:53.981Z",
+      "updatedAt": "2026-10-24T15:08:53.981Z",
+      "moodAnalysis": {
+        "primaryMood": "Expansive Wonder",
+        "moodCategory": "reflective",
+        "moodScore": 9.1,
+        "emotionalSpectrum": [
+          {
+            "emotion": "Wonder",
+            "percentage": 65
+          },
+          {
+            "emotion": "Reverence",
+            "percentage": 25
+          },
+          {
+            "emotion": "Vitality",
+            "percentage": 10
+          }
+        ],
+        "keyThemes": [
+          "nature immersion",
+          "perspective shift",
+          "sacred spaces",
+          "vitality"
+        ],
+        "personalizedReflection": "Standing on the mountain ridge gave you an emotional altitude shift. Witnessing enduring natural landscapes naturally untangled small worries.",
+        "soothingAdvice": "Whenever you feel cramped by modern urgency, recall the scent of damp cedar and the spaciousness of the mountain skyline.",
+        "reflectivePrompt": "How can you bring a small piece of the mountain’s enduring patience into your daily routine?",
+        "analyzedAt": "2026-10-24T15:08:53.981Z"
+      }
+    },
+    {
+      "id": "entry-3",
+      "journalId": "gratitude",
+      "title": "A Friend’s Laughter and Roasted Chestnuts",
+      "content": "Met Maya by the square. The breeze was brisk, but the smell of roasted chestnuts from the corner cart was intoxicating. \n    \nWe sat on a weathered stone bench and caught up for two hours without checking our phones once. Laughing until our ribs ached about old university memories reminded me how deeply healing effortless friendship is.",
+      "date": "2026-10-23T15:08:53.981Z",
+      "location": "Old Town Square",
+      "weather": "Brisk Breeze, 12°C",
+      "userMoodTag": "grateful",
+      "fontChoice": "playfair",
+      "paperStyle": "linen-ruled",
+      "wordCount": 68,
+      "readingTimeMinutes": 1,
+      "tags": [
+        "friendship",
+        "gratitude",
+        "laughter"
+      ],
+      "createdAt": "2026-10-23T15:08:53.981Z",
+      "updatedAt": "2026-10-23T15:08:53.981Z",
+      "moodAnalysis": {
+        "primaryMood": "Warm Connection",
+        "moodCategory": "joyful",
+        "moodScore": 9.3,
+        "emotionalSpectrum": [
+          {
+            "emotion": "Joyful Connection",
+            "percentage": 75
+          },
+          {
+            "emotion": "Affection",
+            "percentage": 15
+          },
+          {
+            "emotion": "Nostalgia",
+            "percentage": 10
+          }
+        ],
+        "keyThemes": [
+          "meaningful friendship",
+          "shared humor",
+          "unplugged connection"
+        ],
+        "personalizedReflection": "Genuine connection without screens is one of the highest nourishers of the human spirit. Your gratitude here shines with warm authenticity.",
+        "soothingAdvice": "Send Maya a short note during the week to thank her for the warmth. Gratitude expressed multiplies its sweetness.",
+        "reflectivePrompt": "Whose presence in your life makes you feel completely at ease being yourself?",
+        "analyzedAt": "2026-10-23T15:08:53.981Z"
+      }
+    }
+  ]
+}

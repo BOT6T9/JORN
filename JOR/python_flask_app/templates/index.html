@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SereneNotes Journal - Flask &amp; HTML</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    .font-cormorant { font-family: 'Cormorant Garamond', serif; }
+    .font-playfair { font-family: 'Playfair Display', serif; }
+    .font-caveat { font-family: 'Caveat', cursive; }
+    .font-lora { font-family: 'Lora', serif; }
+    .font-typewriter { font-family: 'Courier Prime', monospace; }
+    .font-sans-clean { font-family: 'Plus Jakarta Sans', sans-serif; }
+
+    /* Paper background textures */
+    .paper-warm-parchment { background-color: #FAF7F2; }
+    .paper-soft-sage { background-color: #F2F5F3; }
+    .paper-lavender-mist { background-color: #F6F4F8; }
+    .paper-linen-ruled {
+      background-color: #FBF9F5;
+      background-image: repeating-linear-gradient(transparent, transparent 31px, rgba(140, 130, 115, 0.12) 31px, rgba(140, 130, 115, 0.12) 32px);
+      line-height: 32px;
+    }
+    .paper-vintage-grid {
+      background-color: #FAF8F4;
+      background-image: linear-gradient(rgba(140, 130, 115, 0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(140, 130, 115, 0.08) 1px, transparent 1px);
+      background-size: 24px 24px;
+    }
+    .paper-night-velvet {
+      background-color: #1E2129;
+      color: #E2E8F0;
+    }
+  </style>
+</head>
+<body class="bg-[#FAF8F5] text-stone-800 antialiased h-screen overflow-hidden flex flex-col">
+
+  <!-- Main View Frame -->
+  <div class="flex h-full w-full overflow-hidden">
+    <!-- Sidebar -->
+    <aside class="w-80 h-full bg-[#F7F5F0] border-r border-[#E8E4DC] flex flex-col shrink-0">
+      <!-- Brand & Stats -->
+      <div class="p-4 border-b border-[#E8E4DC]">
+        <div class="flex items-center justify-between mb-3">
+          <div class="flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-stone-500"></span>
+            <span class="font-serif text-lg font-medium tracking-tight text-stone-800">SereneNotes</span>
+          </div>
+          <span id="entries-count-badge" class="text-xs text-stone-500">0 entries</span>
+        </div>
+
+        <!-- Journal Dropdown -->
+        <div class="relative">
+          <select id="journal-select" onchange="switchJournal(this.value)" class="w-full bg-white border border-stone-200 rounded-xl px-3 py-2 text-xs font-medium text-stone-700 outline-none">
+            <option value="all">All Entries</option>
+            <option value="daily" selected>Daily Diary</option>
+            <option value="trips">Trips &amp; Wanderlust</option>
+            <option value="gratitude">Quiet Gratitude</option>
+          </select>
+        </div>
+
+        <!-- New Entry Button -->
+        <button onclick="createNewEntry()" class="w-full mt-3 flex items-center justify-center gap-2 py-2 px-3 bg-stone-800 hover:bg-stone-900 text-white rounded-xl text-xs font-medium transition-colors">
+          <span>+ New Entry</span>
+        </button>
+      </div>
+
+      <!-- Search & Mood Filter -->
+      <div class="p-3 border-b border-[#E8E4DC] space-y-2">
+        <input type="text" id="search-input" oninput="renderEntryList()" placeholder="Search your reflections..." class="w-full bg-white/80 border border-stone-200 rounded-lg px-2.5 py-1.5 text-xs text-stone-700 outline-none placeholder:text-stone-400">
+      </div>
+
+      <!-- Entry List -->
+      <div id="entries-list" class="flex-1 overflow-y-auto p-2 space-y-1.5">
+        <!-- Filled via JS -->
+      </div>
+
+      <!-- Footer Action -->
+      <div class="p-3 border-t border-[#E8E4DC] bg-[#F3F0E9] flex items-center justify-between">
+        <span class="text-xs text-stone-500">Flask &bull; HTML &bull; JSON</span>
+        <button onclick="showTrendsModal()" class="text-xs text-stone-700 hover:text-stone-900 font-medium">Mood Trends</button>
+      </div>
+    </aside>
+
+    <!-- Canvas -->
+    <main class="flex-1 flex flex-col h-full bg-[#EFECE6] overflow-hidden">
+      <!-- Toolbar -->
+      <header class="h-14 px-6 border-b border-[#DFDAD0] bg-white/80 backdrop-blur-xs flex items-center justify-between shrink-0">
+        <div class="flex items-center gap-3">
+          <span id="canvas-date" class="text-xs text-stone-500 font-medium">Today</span>
+          <span class="text-stone-300">&bull;</span>
+          <span id="save-indicator" class="text-xs text-emerald-600 font-medium">Saved</span>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <!-- Font Selection -->
+          <select id="font-select" onchange="changeFont(this.value)" class="text-xs bg-white border border-stone-200 rounded-lg px-2.5 py-1.5 text-stone-700 outline-none">
+            <option value="cormorant">Classic Book</option>
+            <option value="playfair">Literary Editorial</option>
+            <option value="caveat">Handwritten</option>
+            <option value="lora">Gentle Novel</option>
+            <option value="sans-clean">Modern Clean</option>
+            <option value="typewriter">Vintage Typewriter</option>
+          </select>
+
+          <!-- Paper Selection -->
+          <select id="paper-select" onchange="changePaper(this.value)" class="text-xs bg-white border border-stone-200 rounded-lg px-2.5 py-1.5 text-stone-700 outline-none">
+            <option value="warm-parchment">Warm Parchment</option>
+            <option value="soft-sage">Soft Sage</option>
+            <option value="lavender-mist">Lavender Mist</option>
+            <option value="linen-ruled">Linen Ruled</option>
+            <option value="vintage-grid">Vintage Grid</option>
+            <option value="night-velvet">Midnight Velvet</option>
+          </select>
+
+          <button onclick="analyzeCurrentEntry()" class="px-3 py-1.5 bg-stone-800 hover:bg-stone-900 text-white rounded-lg text-xs font-medium transition-colors">
+            Analyze Mood
+          </button>
+        </div>
+      </header>
+
+      <!-- Writing Paper Surface -->
+      <div class="flex-1 overflow-y-auto p-4 sm:p-8 flex justify-center">
+        <div id="paper-sheet" class="w-full max-w-3xl min-h-[600px] paper-warm-parchment rounded-2xl shadow-sm border border-stone-200/80 p-8 sm:p-12 flex flex-col transition-colors duration-200">
+          <!-- Context Row: Location & Weather -->
+          <div class="flex flex-wrap items-center gap-4 text-xs text-stone-500 mb-6 pb-4 border-b border-stone-200/60">
+            <div class="flex items-center gap-1.5">
+              <span>&#128205;</span>
+              <input type="text" id="entry-location" oninput="scheduleAutoSave()" placeholder="Add location..." class="bg-transparent border-b border-transparent hover:border-stone-300 focus:border-stone-500 outline-none text-xs text-stone-600">
+            </div>
+            <div class="flex items-center gap-1.5">
+              <span>&#9728;</span>
+              <input type="text" id="entry-weather" oninput="scheduleAutoSave()" placeholder="Add weather..." class="bg-transparent border-b border-transparent hover:border-stone-300 focus:border-stone-500 outline-none text-xs text-stone-600">
+            </div>
+            <div class="ml-auto text-xs text-stone-400">
+              <span id="word-count-badge">0</span> words &bull; <span id="reading-time-badge">1</span> min read
+            </div>
+          </div>
+
+          <!-- Title -->
+          <input type="text" id="entry-title" oninput="scheduleAutoSave()" placeholder="Title your reflection..." class="w-full bg-transparent font-serif text-2xl sm:text-3xl font-medium outline-none text-stone-800 placeholder:text-stone-300 mb-6">
+
+          <!-- Content Body -->
+          <textarea id="entry-content" oninput="scheduleAutoSave()" placeholder="Write freely in unhurried silence..." class="w-full flex-1 bg-transparent font-cormorant text-lg sm:text-xl leading-relaxed outline-none text-stone-800 placeholder:text-stone-300 resize-none min-h-[350px]"></textarea>
+
+          <!-- Reflection Box -->
+          <div id="reflection-box" class="hidden mt-8 p-4 rounded-xl bg-white/70 border border-stone-200/80 space-y-2">
+            <div class="flex items-center justify-between text-xs">
+              <span class="font-medium text-stone-700" id="reflection-mood">Serene Contentment</span>
+              <span class="text-stone-500" id="reflection-score">Score: 8.5 / 10</span>
+            </div>
+            <p id="reflection-text" class="text-xs sm:text-sm italic font-serif text-stone-700 leading-relaxed"></p>
+            <p id="reflection-advice" class="text-xs text-stone-500"></p>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Trends Modal -->
+  <div id="trends-modal" class="hidden fixed inset-0 z-50 bg-stone-900/40 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl p-6 max-w-md w-full border border-stone-200 shadow-xl space-y-4">
+      <div class="flex items-center justify-between pb-2 border-b border-stone-200">
+        <h3 class="font-serif text-lg font-medium text-stone-800">Mood Trends &amp; Rhythm</h3>
+        <button onclick="hideTrendsModal()" class="text-stone-400 hover:text-stone-700 text-lg">&times;</button>
+      </div>
+      <div class="space-y-3 text-xs text-stone-600">
+        <div class="p-3 bg-stone-50 rounded-xl border border-stone-200">
+          <div class="font-medium text-stone-800 text-sm mb-1">Weekly Arc</div>
+          <p id="trends-headline">Gentle Emotional Balance &amp; Regular Reflection</p>
+        </div>
+        <div class="grid grid-cols-2 gap-2 text-center">
+          <div class="p-3 bg-stone-50 rounded-xl border border-stone-200">
+            <div class="text-[10px] text-stone-400 uppercase">Total Entries</div>
+            <div id="trends-entries-count" class="text-lg font-serif font-medium text-stone-800">0</div>
+          </div>
+          <div class="p-3 bg-stone-50 rounded-xl border border-stone-200">
+            <div class="text-[10px] text-stone-400 uppercase">Avg Mood Score</div>
+            <div id="trends-avg-score" class="text-lg font-serif font-medium text-stone-800">8.6 / 10</div>
+          </div>
+        </div>
+      </div>
+      <button onclick="hideTrendsModal()" class="w-full py-2 bg-stone-800 text-white text-xs font-medium rounded-xl">Close</button>
+    </div>
+  </div>
+
+  <!-- Client JavaScript -->
+  <script>
+    let entries = [];
+    let journals = [];
+    let activeEntryId = null;
+    let activeJournalId = 'daily';
+    let autoSaveTimeout = null;
+
+    async function init() {
+      try {
+        const [jRes, eRes] = await Promise.all([
+          fetch('/api/journals'),
+          fetch('/api/entries')
+        ]);
+        const jData = await jRes.json();
+        const eData = await eRes.json();
+        journals = jData.journals || [];
+        entries = eData.entries || [];
+
+        if (entries.length > 0) {
+          activeEntryId = entries[0].id;
+        }
+        renderEntryList();
+        loadActiveEntry();
+      } catch (err) {
+        console.error('Failed to load data:', err);
+      }
+    }
+
+    function switchJournal(jid) {
+      activeJournalId = jid;
+      renderEntryList();
+      const visible = getVisibleEntries();
+      if (visible.length > 0) {
+        activeEntryId = visible[0].id;
+      } else {
+        activeEntryId = null;
+      }
+      loadActiveEntry();
+    }
+
+    function getVisibleEntries() {
+      const q = document.getElementById('search-input').value.toLowerCase().trim();
+      return entries.filter(e => {
+        const matchJournal = activeJournalId === 'all' || e.journalId === activeJournalId;
+        const matchSearch = !q || (e.title || '').toLowerCase().includes(q) || (e.content || '').toLowerCase().includes(q);
+        return matchJournal && matchSearch;
+      });
+    }
+
+    function renderEntryList() {
+      const listEl = document.getElementById('entries-list');
+      const visible = getVisibleEntries();
+      document.getElementById('entries-count-badge').textContent = `${entries.length} entries`;
+
+      if (visible.length === 0) {
+        listEl.innerHTML = '<div class="p-4 text-center text-xs text-stone-400">No reflections found</div>';
+        return;
+      }
+
+      listEl.innerHTML = visible.map(e => {
+        const isSelected = e.id === activeEntryId;
+        const activeClass = isSelected ? 'bg-white shadow-xs border-stone-300' : 'hover:bg-white/50 border-transparent';
+        const dateStr = new Date(e.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+        return `
+          <div onclick="selectEntry('${e.id}')" class="p-3 rounded-xl border ${activeClass} cursor-pointer transition-all">
+            <div class="font-medium text-xs text-stone-800 truncate">${e.title || 'Untitled Entry'}</div>
+            <div class="text-[11px] text-stone-500 line-clamp-1 mt-0.5">${e.content ? e.content.replace(/\\n/g, ' ') : 'Empty page...'}</div>
+            <div class="flex items-center justify-between mt-2 text-[10px] text-stone-400">
+              <span>${dateStr}</span>
+              <span>${e.wordCount || 0} words</span>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function selectEntry(id) {
+      activeEntryId = id;
+      renderEntryList();
+      loadActiveEntry();
+    }
+
+    function loadActiveEntry() {
+      const entry = entries.find(e => e.id === activeEntryId);
+      if (!entry) {
+        document.getElementById('entry-title').value = '';
+        document.getElementById('entry-content').value = '';
+        document.getElementById('entry-location').value = '';
+        document.getElementById('entry-weather').value = '';
+        document.getElementById('reflection-box').classList.add('hidden');
+        return;
+      }
+
+      document.getElementById('entry-title').value = entry.title || '';
+      document.getElementById('entry-content').value = entry.content || '';
+      document.getElementById('entry-location').value = entry.location || '';
+      document.getElementById('entry-weather').value = entry.weather || '';
+      document.getElementById('font-select').value = entry.fontChoice || 'cormorant';
+      document.getElementById('paper-select').value = entry.paperStyle || 'warm-parchment';
+
+      changeFont(entry.fontChoice || 'cormorant', false);
+      changePaper(entry.paperStyle || 'warm-parchment', false);
+      updateCounts(entry.content || '');
+
+      const dateStr = new Date(entry.date).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+      document.getElementById('canvas-date').textContent = dateStr;
+
+      if (entry.moodAnalysis) {
+        document.getElementById('reflection-mood').textContent = entry.moodAnalysis.primaryMood;
+        document.getElementById('reflection-score').textContent = `Score: ${entry.moodAnalysis.moodScore} / 10`;
+        document.getElementById('reflection-text').textContent = `\u201C${entry.moodAnalysis.personalizedReflection}\u201D`;
+        document.getElementById('reflection-advice').textContent = entry.moodAnalysis.soothingAdvice || '';
+        document.getElementById('reflection-box').classList.remove('hidden');
+      } else {
+        document.getElementById('reflection-box').classList.add('hidden');
+      }
+    }
+
+    function updateCounts(text) {
+      const words = text.trim() ? text.trim().split(/\\s+/).length : 0;
+      document.getElementById('word-count-badge').textContent = words;
+      document.getElementById('reading-time-badge').textContent = Math.max(1, Math.round(words / 180));
+    }
+
+    function scheduleAutoSave() {
+      document.getElementById('save-indicator').textContent = 'Saving...';
+      document.getElementById('save-indicator').className = 'text-xs text-amber-600 font-medium';
+
+      const content = document.getElementById('entry-content').value;
+      updateCounts(content);
+
+      clearTimeout(autoSaveTimeout);
+      autoSaveTimeout = setTimeout(saveCurrentEntry, 600);
+    }
+
+    async function saveCurrentEntry() {
+      if (!activeEntryId) return;
+      const current = entries.find(e => e.id === activeEntryId);
+      if (!current) return;
+
+      const updated = {
+        ...current,
+        title: document.getElementById('entry-title').value,
+        content: document.getElementById('entry-content').value,
+        location: document.getElementById('entry-location').value,
+        weather: document.getElementById('entry-weather').value,
+        fontChoice: document.getElementById('font-select').value,
+        paperStyle: document.getElementById('paper-select').value,
+      };
+
+      try {
+        const res = await fetch('/api/entries', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(updated)
+        });
+        const data = await res.json();
+        if (data.entry) {
+          const idx = entries.findIndex(e => e.id === activeEntryId);
+          if (idx >= 0) entries[idx] = data.entry;
+          document.getElementById('save-indicator').textContent = 'Saved';
+          document.getElementById('save-indicator').className = 'text-xs text-emerald-600 font-medium';
+          renderEntryList();
+        }
+      } catch (err) {
+        console.error('Save failed:', err);
+      }
+    }
+
+    async function createNewEntry() {
+      const newDraft = {
+        journalId: activeJournalId === 'all' ? 'daily' : activeJournalId,
+        title: 'Untitled Entry',
+        content: '',
+        date: new Date().toISOString(),
+        userMoodTag: 'peaceful',
+        fontChoice: 'cormorant',
+        paperStyle: 'warm-parchment',
+      };
+
+      try {
+        const res = await fetch('/api/entries', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(newDraft)
+        });
+        const data = await res.json();
+        if (data.entry) {
+          entries.unshift(data.entry);
+          activeEntryId = data.entry.id;
+          renderEntryList();
+          loadActiveEntry();
+        }
+      } catch (err) {
+        console.error('Failed to create entry:', err);
+      }
+    }
+
+    function changeFont(font, save = true) {
+      const textarea = document.getElementById('entry-content');
+      textarea.className = textarea.className.replace(/font-\\w+/g, '');
+      textarea.classList.add(`font-${font}`);
+      if (save) scheduleAutoSave();
+    }
+
+    function changePaper(style, save = true) {
+      const sheet = document.getElementById('paper-sheet');
+      sheet.className = sheet.className.replace(/paper-[\\w-]+/g, '');
+      sheet.classList.add(`paper-${style}`);
+      if (save) scheduleAutoSave();
+    }
+
+    async function analyzeCurrentEntry() {
+      const content = document.getElementById('entry-content').value;
+      if (!content.trim()) return;
+
+      try {
+        const res = await fetch('/api/analyze-entry', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            entryId: activeEntryId,
+            content: content
+          })
+        });
+        const data = await res.json();
+        if (data.analysis) {
+          const entry = entries.find(e => e.id === activeEntryId);
+          if (entry) entry.moodAnalysis = data.analysis;
+          loadActiveEntry();
+        }
+      } catch (err) {
+        console.error('Analysis failed:', err);
+      }
+    }
+
+    function showTrendsModal() {
+      document.getElementById('trends-entries-count').textContent = entries.length;
+      document.getElementById('trends-modal').classList.remove('hidden');
+    }
+
+    function hideTrendsModal() {
+      document.getElementById('trends-modal').classList.add('hidden');
+    }
+
+    init();
+  </script>
+</body>
+</html>

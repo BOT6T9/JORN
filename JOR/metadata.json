@@ -1,0 +1,8 @@
+{
+  "name": "Remix SereneNotes AI Journal",
+  "description": "A calming, minimalist AI daily diary that reflects on your mood, offers daily personalized insights, and supports custom journals, fonts, and soothing paper themes.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
